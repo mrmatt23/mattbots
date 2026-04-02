@@ -1,0 +1,48 @@
+<svg width="300" height="90" viewBox="0 0 300 90" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="blueGradD" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#60a5fa"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+    <filter id="nodeGlowD" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="1" stdDeviation="2.5" flood-color="white" flood-opacity="0.6"/>
+    </filter>
+    <filter id="iconShadowD">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#2563eb" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+
+  <!-- Clean white background -->
+  <rect width="300" height="90" fill="#ffffff"/>
+
+  <!-- Icon: Blue gradient rounded square with soft shadow -->
+  <rect x="10" y="13" width="60" height="64" rx="12" fill="url(#blueGradD)" filter="url(#iconShadowD)"/>
+
+  <!-- Network connecting lines: white, semi-transparent -->
+  <line x1="21" y1="33" x2="37" y2="33" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+  <line x1="37" y1="33" x2="53" y2="33" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+  <line x1="21" y1="57" x2="37" y2="57" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+  <line x1="37" y1="57" x2="53" y2="57" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+  <line x1="21" y1="33" x2="21" y2="57" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+  <line x1="37" y1="33" x2="37" y2="57" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+  <line x1="53" y1="33" x2="53" y2="57" stroke="rgba(255,255,255,0.5)" stroke-width="1.5"/>
+  <!-- Diagonal accents -->
+  <line x1="21" y1="33" x2="37" y2="57" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
+  <line x1="53" y1="33" x2="37" y2="57" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
+
+  <!-- Nodes: solid white with glow -->
+  <circle cx="21" cy="33" r="4.5" fill="white" filter="url(#nodeGlowD)"/>
+  <circle cx="37" cy="33" r="4.5" fill="white" filter="url(#nodeGlowD)"/>
+  <circle cx="53" cy="33" r="4.5" fill="white" filter="url(#nodeGlowD)"/>
+  <circle cx="21" cy="57" r="4.5" fill="white" filter="url(#nodeGlowD)"/>
+  <circle cx="53" cy="57" r="4.5" fill="white" filter="url(#nodeGlowD)"/>
+  <!-- Center node: ring style (hub) -->
+  <circle cx="37" cy="57" r="4.5" fill="rgba(255,255,255,0.25)" stroke="white" stroke-width="1.8"/>
+
+  <!-- Wordmark: dark navy + blue -->
+  <text x="84" y="60" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="38" font-weight="800" letter-spacing="-1.5">
+    <tspan fill="#0f172a">matt</tspan><tspan fill="#2563eb">bots</tspan>
+  </text>
+  <!-- Tagline -->
+  <text x="85" y="76" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#94a3b8" letter-spacing="1.5">mattbots.com</text>
+</svg>

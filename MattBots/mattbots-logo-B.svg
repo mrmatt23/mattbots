@@ -1,0 +1,47 @@
+<svg width="300" height="90" viewBox="0 0 300 90" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="goldGlowB" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="0" stdDeviation="3.5" flood-color="#f59e0b" flood-opacity="0.65"/>
+    </filter>
+    <filter id="dimGoldB">
+      <feDropShadow dx="0" dy="0" stdDeviation="2" flood-color="#f59e0b" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Dark background for entire logo -->
+  <rect width="300" height="90" fill="#080d1a" rx="14"/>
+
+  <!-- Subtle scanline texture hint -->
+  <rect width="300" height="90" fill="url(#scan)" rx="14" opacity="0.03"/>
+
+  <!-- Icon: slightly lighter dark panel with gold border -->
+  <rect x="10" y="13" width="60" height="64" rx="12" fill="#0d1526" stroke="#f59e0b" stroke-width="1" stroke-opacity="0.35"/>
+
+  <!-- Network connecting lines -->
+  <line x1="21" y1="33" x2="37" y2="33" stroke="#f59e0b" stroke-width="1.5" opacity="0.4"/>
+  <line x1="37" y1="33" x2="53" y2="33" stroke="#f59e0b" stroke-width="1.5" opacity="0.4"/>
+  <line x1="21" y1="57" x2="37" y2="57" stroke="#f59e0b" stroke-width="1.5" opacity="0.4"/>
+  <line x1="37" y1="57" x2="53" y2="57" stroke="#f59e0b" stroke-width="1.5" opacity="0.4"/>
+  <line x1="21" y1="33" x2="21" y2="57" stroke="#f59e0b" stroke-width="1.5" opacity="0.4"/>
+  <line x1="37" y1="33" x2="37" y2="57" stroke="#f59e0b" stroke-width="1.5" opacity="0.4"/>
+  <line x1="53" y1="33" x2="53" y2="57" stroke="#f59e0b" stroke-width="1.5" opacity="0.4"/>
+  <!-- Diagonal accents -->
+  <line x1="21" y1="33" x2="37" y2="57" stroke="#f59e0b" stroke-width="1" opacity="0.18"/>
+  <line x1="53" y1="33" x2="37" y2="57" stroke="#f59e0b" stroke-width="1" opacity="0.18"/>
+
+  <!-- Nodes: glowing gold -->
+  <circle cx="21" cy="33" r="4.5" fill="#f59e0b" filter="url(#goldGlowB)"/>
+  <circle cx="37" cy="33" r="4.5" fill="#f59e0b" filter="url(#goldGlowB)"/>
+  <circle cx="53" cy="33" r="4.5" fill="#f59e0b" filter="url(#goldGlowB)"/>
+  <circle cx="21" cy="57" r="4.5" fill="#f59e0b" filter="url(#goldGlowB)"/>
+  <circle cx="53" cy="57" r="4.5" fill="#f59e0b" filter="url(#goldGlowB)"/>
+  <!-- Center node: ring style (hub) -->
+  <circle cx="37" cy="57" r="4.5" fill="rgba(245,158,11,0.2)" stroke="#f59e0b" stroke-width="1.5" filter="url(#dimGoldB)"/>
+
+  <!-- Wordmark: light + gold -->
+  <text x="84" y="60" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="38" font-weight="800" letter-spacing="-1.5">
+    <tspan fill="#e2e8f0">matt</tspan><tspan fill="#f59e0b">bots</tspan>
+  </text>
+  <!-- Tagline -->
+  <text x="85" y="76" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#3d4f6b" letter-spacing="1.5">mattbots.com</text>
+</svg>
