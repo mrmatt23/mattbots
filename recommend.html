@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
+  <!-- Prevent flash of wrong theme -->
+  <script>document.documentElement.setAttribute('data-theme',localStorage.getItem('mattbots_theme')||'dark');</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Recommend an Idea â MattBots</title>
+  <title>Recommend an Idea — MattBots</title>
   <meta name="description" content="Submit a 3D print idea or bot idea to MattBots." />
   <style>
     :root {
@@ -25,6 +27,45 @@
       --radius: 12px;
       --radius-lg: 20px;
     }
+
+    /* ─── LIGHT (DAY) THEME ─── */
+    [data-theme="light"] {
+      --bg: #f0f4f8;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f8fafc;
+      --border: rgba(15,23,42,0.1);
+      --border-hover: rgba(15,23,42,0.32);
+      --text: #0f172a;
+      --text-dim: #475569;
+      --text-muted: #94a3b8;
+    }
+    [data-theme="light"] body::before {
+      background-image: radial-gradient(circle, rgba(15,23,42,0.04) 1px, transparent 1px);
+    }
+    [data-theme="light"] nav { background: rgba(240,244,248,0.92); }
+    [data-theme="light"] .form-input,
+    [data-theme="light"] .form-textarea {
+      background: rgba(0,0,0,0.04);
+      color: var(--text);
+    }
+    [data-theme="light"] .form-input::placeholder,
+    [data-theme="light"] .form-textarea::placeholder { color: var(--text-muted); }
+    [data-theme="light"] .cat-btn {
+      background: rgba(0,0,0,0.03);
+      color: var(--text-dim);
+    }
+    [data-theme="light"] .file-zone { background: rgba(0,0,0,0.02); }
+    [data-theme="light"] .note {
+      background: rgba(245,158,11,0.06);
+      color: var(--text-dim);
+    }
+
+    /* ─── SMOOTH TRANSITIONS ─── */
+    body, nav, .form-card, .form-input, .form-textarea, .cat-btn,
+    .file-zone, .note, footer {
+      transition: background-color 0.35s ease, border-color 0.35s ease, color 0.35s ease;
+    }
+
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
@@ -42,312 +83,140 @@
       background-size: 36px 36px;
       pointer-events: none;
       z-index: 0;
+      transition: background-image 0.35s ease;
     }
 
-    /* âââ NAV âââ */
+    /* ─── NAV ─── */
     nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 56px;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 56px;
       background: rgba(8,13,26,0.88);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border);
     }
-    .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-    }
-    .nav-wordmark {
-      font-size: 20px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      color: var(--text);
-    }
-    .nav-wordmark em { color: var(--gold); font-style: normal; }
+    .nav-logo { display: flex; align-items: center; text-decoration: none; flex-shrink: 0; }
+    #site-logo { height: 38px; width: auto; display: block; transition: opacity 0.25s ease; }
     nav ul { display: flex; gap: 32px; list-style: none; }
-    nav ul a {
-      color: var(--text-dim);
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 500;
-      letter-spacing: 0.2px;
-      transition: color 0.2s;
-    }
+    nav ul a { color: var(--text-dim); text-decoration: none; font-size: 14px; font-weight: 500; letter-spacing: 0.2px; transition: color 0.2s; }
     nav ul a:hover { color: var(--gold); }
     nav ul a.active { color: var(--gold); }
 
-    /* âââ WRAPPER âââ */
-    .wrap {
-      position: relative;
-      z-index: 1;
-      max-width: 760px;
-      margin: 0 auto;
-      padding: 0 56px;
+    /* ─── THEME TOGGLE ─── */
+    .theme-toggle {
+      background: rgba(245,158,11,0.1);
+      border: 1px solid rgba(245,158,11,0.28);
+      border-radius: 100px;
+      padding: 6px 13px;
+      cursor: pointer; font-size: 16px; line-height: 1;
+      flex-shrink: 0; display: flex; align-items: center;
+      transition: background 0.2s, border-color 0.2s, transform 0.15s;
     }
+    .theme-toggle:hover { background: rgba(245,158,11,0.2); border-color: var(--gold); transform: scale(1.07); }
+    [data-theme="light"] .theme-toggle { background: rgba(37,99,235,0.08); border-color: rgba(37,99,235,0.22); }
+    [data-theme="light"] .theme-toggle:hover { background: rgba(37,99,235,0.16); border-color: rgba(37,99,235,0.5); }
 
-    /* âââ PAGE âââ */
-    .page {
-      padding-top: 140px;
-      padding-bottom: 96px;
-    }
+    /* ─── WRAPPER ─── */
+    .wrap { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; padding: 0 56px; }
 
-    .label {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 2.8px;
-      color: var(--gold);
-      text-transform: uppercase;
-      margin-bottom: 10px;
-    }
-    h1 {
-      font-size: clamp(30px, 4vw, 42px);
-      font-weight: 800;
-      letter-spacing: -1.2px;
-      margin-bottom: 10px;
-      line-height: 1.1;
-    }
-    .sub {
-      font-size: 16px;
-      color: var(--text-dim);
-      margin-bottom: 44px;
-      max-width: 560px;
-    }
+    /* ─── PAGE ─── */
+    .page { padding-top: 140px; padding-bottom: 96px; }
+    .label { font-size: 11px; font-weight: 700; letter-spacing: 2.8px; color: var(--gold); text-transform: uppercase; margin-bottom: 10px; }
+    h1 { font-size: clamp(30px, 4vw, 42px); font-weight: 800; letter-spacing: -1.2px; margin-bottom: 10px; line-height: 1.1; }
+    .sub { font-size: 16px; color: var(--text-dim); margin-bottom: 44px; max-width: 560px; }
 
-    /* âââ FORM CARD âââ */
-    .form-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 40px;
-    }
-
-    .form-group {
-      margin-bottom: 24px;
-    }
-    .form-group label {
-      display: block;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 8px;
-      letter-spacing: 0.2px;
-    }
-    .form-group label .opt {
-      font-weight: 400;
-      color: var(--text-muted);
-      font-size: 12px;
-    }
+    /* ─── FORM CARD ─── */
+    .form-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 40px; }
+    .form-group { margin-bottom: 24px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 8px; letter-spacing: 0.2px; }
+    .form-group label .opt { font-weight: 400; color: var(--text-muted); font-size: 12px; }
 
     /* Category toggle */
-    .category-toggle {
-      display: flex;
-      gap: 10px;
-    }
+    .category-toggle { display: flex; gap: 10px; }
     .cat-btn {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 13px 18px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.025);
-      color: var(--text-dim);
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-family: inherit;
+      flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 13px 18px; border-radius: 10px; border: 1px solid var(--border);
+      background: rgba(255,255,255,0.025); color: var(--text-dim);
+      font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit;
     }
-    .cat-btn:hover {
-      border-color: rgba(245,158,11,0.3);
-      color: var(--text);
-    }
-    .cat-btn.selected {
-      border-color: var(--gold);
-      background: rgba(245,158,11,0.09);
-      color: var(--gold);
-    }
+    .cat-btn:hover { border-color: rgba(245,158,11,0.3); color: var(--text); }
+    .cat-btn.selected { border-color: var(--gold); background: rgba(245,158,11,0.09); color: var(--gold); }
     .cat-btn .cat-icon { font-size: 18px; }
-
-    /* Hidden radio inputs */
     .category-toggle input[type="radio"] { display: none; }
 
     /* Text inputs */
-    .form-input,
-    .form-textarea {
+    .form-input, .form-textarea {
       width: 100%;
       background: rgba(255,255,255,0.04);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px 16px;
-      color: var(--text);
-      font-size: 14px;
-      font-family: inherit;
-      outline: none;
+      border: 1px solid var(--border); border-radius: 8px;
+      padding: 12px 16px; color: var(--text); font-size: 14px;
+      font-family: inherit; outline: none;
       transition: border-color 0.2s, box-shadow 0.2s;
     }
-    .form-input:focus,
-    .form-textarea:focus {
-      border-color: var(--gold);
-      box-shadow: 0 0 0 3px rgba(245,158,11,0.08);
-    }
-    .form-input::placeholder,
-    .form-textarea::placeholder { color: var(--text-muted); }
-    .form-textarea {
-      resize: vertical;
-      min-height: 100px;
-      line-height: 1.6;
-    }
+    .form-input:focus, .form-textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(245,158,11,0.08); }
+    .form-input::placeholder, .form-textarea::placeholder { color: var(--text-muted); }
+    .form-textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
 
     /* File upload zone */
     .file-zone {
-      border: 1.5px dashed rgba(245,158,11,0.25);
-      border-radius: 10px;
-      padding: 28px 20px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.2s;
-      position: relative;
+      border: 1.5px dashed rgba(245,158,11,0.25); border-radius: 10px;
+      padding: 28px 20px; text-align: center; cursor: pointer;
+      transition: all 0.2s; position: relative;
       background: rgba(255,255,255,0.015);
     }
-    .file-zone:hover,
-    .file-zone.dragover {
-      border-color: var(--gold);
-      background: rgba(245,158,11,0.05);
-    }
-    .file-zone input[type="file"] {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      cursor: pointer;
-      width: 100%;
-      height: 100%;
-    }
+    .file-zone:hover, .file-zone.dragover { border-color: var(--gold); background: rgba(245,158,11,0.05); }
+    .file-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
     .file-icon { font-size: 28px; margin-bottom: 8px; }
-    .file-label {
-      font-size: 14px;
-      color: var(--text-dim);
-      margin-bottom: 4px;
-    }
+    .file-label { font-size: 14px; color: var(--text-dim); margin-bottom: 4px; }
     .file-label strong { color: var(--gold); }
     .file-hint { font-size: 12px; color: var(--text-muted); }
-    .file-name {
-      display: none;
-      margin-top: 10px;
-      font-size: 13px;
-      color: var(--green);
-      font-weight: 600;
-    }
+    .file-name { display: none; margin-top: 10px; font-size: 13px; color: var(--green); font-weight: 600; }
 
     /* Submit button */
     .btn-submit {
-      width: 100%;
-      padding: 15px 28px;
-      background: var(--gold);
-      color: #080d1a;
-      border: none;
-      border-radius: 10px;
-      font-size: 15px;
-      font-weight: 800;
-      cursor: pointer;
-      font-family: inherit;
-      transition: all 0.2s;
-      letter-spacing: 0.2px;
-      margin-top: 8px;
+      width: 100%; padding: 15px 28px;
+      background: var(--gold); color: #080d1a;
+      border: none; border-radius: 10px;
+      font-size: 15px; font-weight: 800; cursor: pointer;
+      font-family: inherit; transition: all 0.2s; letter-spacing: 0.2px; margin-top: 8px;
     }
-    .btn-submit:hover {
-      background: var(--gold-light);
-      transform: translateY(-2px);
-      box-shadow: 0 10px 28px rgba(245,158,11,0.28);
-    }
+    .btn-submit:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 10px 28px rgba(245,158,11,0.28); }
     .btn-submit:active { transform: translateY(0); }
 
     /* Success message */
-    .success-msg {
-      display: none;
-      text-align: center;
-      padding: 48px 32px;
-    }
+    .success-msg { display: none; text-align: center; padding: 48px 32px; }
     .success-icon { font-size: 48px; margin-bottom: 16px; }
-    .success-msg h2 {
-      font-size: 24px;
-      font-weight: 800;
-      margin-bottom: 10px;
-    }
-    .success-msg p {
-      color: var(--text-dim);
-      font-size: 15px;
-      margin-bottom: 24px;
-    }
+    .success-msg h2 { font-size: 24px; font-weight: 800; margin-bottom: 10px; }
+    .success-msg p { color: var(--text-dim); font-size: 15px; margin-bottom: 24px; }
     .btn-back {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 24px;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: 700;
-      text-decoration: none;
-      color: var(--gold);
-      border: 1px solid rgba(245,158,11,0.35);
-      background: transparent;
-      transition: all 0.2s;
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 24px; border-radius: 10px; font-size: 14px; font-weight: 700;
+      text-decoration: none; color: var(--gold);
+      border: 1px solid rgba(245,158,11,0.35); background: transparent; transition: all 0.2s;
     }
-    .btn-back:hover {
-      border-color: var(--gold);
-      background: rgba(245,158,11,0.07);
-    }
+    .btn-back:hover { border-color: var(--gold); background: rgba(245,158,11,0.07); }
 
-    /* Divider inside form */
-    .form-divider {
-      border: none;
-      border-top: 1px solid var(--border);
-      margin: 28px 0;
-    }
-
-    /* Note callout */
+    .form-divider { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
     .note {
-      background: rgba(245,158,11,0.06);
-      border: 1px solid rgba(245,158,11,0.18);
-      border-radius: 8px;
-      padding: 12px 16px;
-      font-size: 13px;
-      color: var(--text-dim);
-      margin-bottom: 24px;
-      line-height: 1.55;
+      background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.18);
+      border-radius: 8px; padding: 12px 16px; font-size: 13px;
+      color: var(--text-dim); margin-bottom: 24px; line-height: 1.55;
     }
     .note strong { color: var(--gold); }
 
-    /* âââ FOOTER âââ */
+    /* ─── FOOTER ─── */
     footer {
-      position: relative;
-      z-index: 1;
-      border-top: 1px solid var(--border);
-      padding: 40px 56px;
-      max-width: 1120px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 16px;
+      position: relative; z-index: 1; border-top: 1px solid var(--border);
+      padding: 40px 56px; max-width: 1120px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
     }
     .footer-mark { font-size: 17px; font-weight: 800; letter-spacing: -0.5px; }
     .footer-mark em { color: var(--gold); font-style: normal; }
     footer p { font-size: 13px; color: var(--text-muted); }
 
-    /* âââ RESPONSIVE âââ */
+    /* ─── RESPONSIVE ─── */
     @media (max-width: 800px) {
-      nav { padding: 14px 24px; }
+      nav { padding: 12px 24px; }
       nav ul { gap: 18px; }
       .wrap { padding: 0 24px; }
       .page { padding-top: 110px; padding-bottom: 72px; }
@@ -362,26 +231,10 @@
 </head>
 <body>
 
-<!-- âââââââââââ NAV âââââââââââ -->
+<!-- ═══════════ NAV ═══════════ -->
 <nav>
   <a href="index.html" class="nav-logo">
-    <svg width="30" height="30" viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg">
-      <rect width="30" height="30" rx="7" fill="#0d1526" stroke="#f59e0b" stroke-width="0.8" stroke-opacity="0.35"/>
-      <line x1="8" y1="11" x2="15" y2="11" stroke="#f59e0b" stroke-width="1.3" opacity="0.4"/>
-      <line x1="15" y1="11" x2="22" y2="11" stroke="#f59e0b" stroke-width="1.3" opacity="0.4"/>
-      <line x1="8" y1="19" x2="15" y2="19" stroke="#f59e0b" stroke-width="1.3" opacity="0.4"/>
-      <line x1="15" y1="19" x2="22" y2="19" stroke="#f59e0b" stroke-width="1.3" opacity="0.4"/>
-      <line x1="8" y1="11" x2="8" y2="19" stroke="#f59e0b" stroke-width="1.3" opacity="0.4"/>
-      <line x1="15" y1="11" x2="15" y2="19" stroke="#f59e0b" stroke-width="1.3" opacity="0.4"/>
-      <line x1="22" y1="11" x2="22" y2="19" stroke="#f59e0b" stroke-width="1.3" opacity="0.4"/>
-      <circle cx="8" cy="11" r="2.6" fill="#f59e0b"/>
-      <circle cx="15" cy="11" r="2.6" fill="#f59e0b"/>
-      <circle cx="22" cy="11" r="2.6" fill="#f59e0b"/>
-      <circle cx="8" cy="19" r="2.6" fill="#f59e0b"/>
-      <circle cx="22" cy="19" r="2.6" fill="#f59e0b"/>
-      <circle cx="15" cy="19" r="2.6" fill="none" stroke="#f59e0b" stroke-width="1.4"/>
-    </svg>
-    <span class="nav-wordmark">matt<em>bots</em></span>
+    <img id="site-logo" src="mattbots-logo-B.svg" alt="MattBots" height="38" style="width:auto;display:block;">
   </a>
   <ul>
     <li><a href="index.html#tools">Tools</a></li>
@@ -390,44 +243,38 @@
     <li><a href="index.html#blog">Blog</a></li>
     <li><a href="recommend.html" class="active">Recommend</a></li>
   </ul>
+  <button id="theme-toggle" class="theme-toggle" aria-label="Toggle day/night mode">🌙</button>
 </nav>
 
-<!-- âââââââââââ PAGE âââââââââââ -->
+<!-- ═══════════ PAGE ═══════════ -->
 <div class="wrap">
   <div class="page">
     <div class="label">Community Input</div>
     <h1>Recommend an Idea</h1>
-    <p class="sub">Got a 3D print concept or bot idea you want to see built? Drop it here â Matt reads every submission.</p>
+    <p class="sub">Got a 3D print concept or bot idea you want to see built? Drop it here — Matt reads every submission.</p>
 
     <div class="form-card">
-
       <!-- SUCCESS STATE -->
       <div class="success-msg" id="success-msg">
-        <div class="success-icon">ð</div>
+        <div class="success-icon">🎉</div>
         <h2>Idea Submitted!</h2>
-        <p>Thanks for the recommendation â Matt will check it out in the inbox.</p>
-        <a href="recommend.html" class="btn-back">â Submit Another</a>
+        <p>Thanks for the recommendation — Matt will check it out in the inbox.</p>
+        <a href="recommend.html" class="btn-back">← Submit Another</a>
       </div>
 
       <!-- FORM -->
-      <form
-        id="recommend-form"
-        action="https://formspree.io/f/YOUR_FORM_ID"
-        method="POST"
-        enctype="multipart/form-data"
-      >
-
+      <form id="recommend-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST" enctype="multipart/form-data">
         <!-- Category -->
         <div class="form-group">
-          <label>Category <span class="opt">â pick one</span></label>
+          <label>Category <span class="opt">— pick one</span></label>
           <div class="category-toggle">
             <label class="cat-btn selected" id="cat-3d">
               <input type="radio" name="category" value="3D Print Idea" checked />
-              <span class="cat-icon">ð¨ï¸</span> 3D Print Idea
+              <span class="cat-icon">🖨️</span> 3D Print Idea
             </label>
             <label class="cat-btn" id="cat-bot">
               <input type="radio" name="category" value="Bot Idea" />
-              <span class="cat-icon">ð¤</span> Bot Idea
+              <span class="cat-icon">🤖</span> Bot Idea
             </label>
           </div>
         </div>
@@ -437,67 +284,52 @@
         <!-- Name -->
         <div class="form-group">
           <label>Your Name <span class="opt">(optional)</span></label>
-          <input
-            class="form-input"
-            type="text"
-            name="name"
-            placeholder="Anonymous is totally fine"
-            autocomplete="off"
-          />
+          <input class="form-input" type="text" name="name" placeholder="Anonymous is totally fine" autocomplete="off" />
         </div>
 
         <!-- Description -->
         <div class="form-group">
           <label>Describe the Idea <span class="opt">(optional)</span></label>
-          <textarea
-            class="form-textarea"
-            name="description"
-            placeholder="What would it do? What problem does it solve? Any cool features?"
-          ></textarea>
+          <textarea class="form-textarea" name="description" placeholder="What would it do? What problem does it solve? Any cool features?"></textarea>
         </div>
 
         <!-- URL -->
         <div class="form-group">
           <label>Reference Link <span class="opt">(optional)</span></label>
-          <input
-            class="form-input"
-            type="url"
-            name="url"
-            placeholder="https://example.com/inspiration"
-          />
+          <input class="form-input" type="url" name="url" placeholder="https://example.com/inspiration" />
         </div>
 
         <!-- File Upload -->
         <div class="form-group">
-          <label>Attach a File <span class="opt">(optional â image, STL, doc, etc.)</span></label>
+          <label>Attach a File <span class="opt">(optional — image, STL, doc, etc.)</span></label>
           <div class="file-zone" id="file-zone">
             <input type="file" name="attachment" id="file-input" accept="*/*" />
-            <div class="file-icon">ð</div>
+            <div class="file-icon">📎</div>
             <div class="file-label"><strong>Click to upload</strong> or drag and drop</div>
-            <div class="file-hint">Any file type Â· Max 10 MB (Formspree free tier)</div>
+            <div class="file-hint">Any file type · Max 10 MB (Formspree free tier)</div>
             <div class="file-name" id="file-name"></div>
           </div>
         </div>
 
         <!-- Note -->
         <div class="note">
-          <strong>Note:</strong> Submissions go directly to Matt's inbox via Formspree. No account required â just hit send.
+          <strong>Note:</strong> Submissions go directly to Matt's inbox via Formspree. No account required — just hit send.
         </div>
 
-        <button type="submit" class="btn-submit" id="submit-btn">Send Recommendation â</button>
+        <button type="submit" class="btn-submit" id="submit-btn">Send Recommendation →</button>
       </form>
     </div>
   </div>
 </div>
 
-<!-- âââââââââââ FOOTER âââââââââââ -->
+<!-- ═══════════ FOOTER ═══════════ -->
 <footer>
   <div class="footer-mark">matt<em>bots</em>.com</div>
-  <p>Â© 2026 MattBots Â· Built with â and too much automation.</p>
+  <p>© 2026 MattBots · Built with ☕ and too much automation.</p>
 </footer>
 
 <script>
-  // ââ Category toggle visual state ââ
+  // Category toggle visual state
   const catBtns = document.querySelectorAll('.cat-btn');
   catBtns.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -506,61 +338,66 @@
     });
   });
 
-  // ââ File upload: show filename ââ
+  // File upload: show filename
   const fileInput = document.getElementById('file-input');
   const fileNameEl = document.getElementById('file-name');
   const fileZone = document.getElementById('file-zone');
-
   fileInput.addEventListener('change', () => {
     if (fileInput.files.length > 0) {
-      fileNameEl.textContent = 'â ' + fileInput.files[0].name;
+      fileNameEl.textContent = '✓ ' + fileInput.files[0].name;
       fileNameEl.style.display = 'block';
-    } else {
-      fileNameEl.style.display = 'none';
-    }
+    } else { fileNameEl.style.display = 'none'; }
   });
-
-  // Drag-over styling
-  fileZone.addEventListener('dragover', e => {
-    e.preventDefault();
-    fileZone.classList.add('dragover');
-  });
+  fileZone.addEventListener('dragover', e => { e.preventDefault(); fileZone.classList.add('dragover'); });
   fileZone.addEventListener('dragleave', () => fileZone.classList.remove('dragover'));
   fileZone.addEventListener('drop', () => fileZone.classList.remove('dragover'));
 
-  // ââ Form submission: show success on redirect ââ
-  // Formspree redirects back with ?success=true if you set a redirect,
-  // but the easiest approach is to handle the AJAX submission so we stay on page.
+  // Form submission
   const form = document.getElementById('recommend-form');
   const successMsg = document.getElementById('success-msg');
   const submitBtn = document.getElementById('submit-btn');
-
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    submitBtn.textContent = 'Sendingâ¦';
+    submitBtn.textContent = 'Sending…';
     submitBtn.disabled = true;
-
     const data = new FormData(form);
     try {
-      const resp = await fetch(form.action, {
-        method: 'POST',
-        body: data,
-        headers: { 'Accept': 'application/json' }
-      });
-      if (resp.ok) {
-        form.style.display = 'none';
-        successMsg.style.display = 'block';
-      } else {
-        submitBtn.textContent = 'Send Recommendation â';
-        submitBtn.disabled = false;
-        alert('Something went wrong. Please try again.');
-      }
-    } catch {
-      submitBtn.textContent = 'Send Recommendation â';
-      submitBtn.disabled = false;
-      alert('Network error â please check your connection and try again.');
-    }
+      const resp = await fetch(form.action, { method: 'POST', body: data, headers: { 'Accept': 'application/json' } });
+      if (resp.ok) { form.style.display = 'none'; successMsg.style.display = 'block'; }
+      else { submitBtn.textContent = 'Send Recommendation →'; submitBtn.disabled = false; alert('Something went wrong. Please try again.'); }
+    } catch { submitBtn.textContent = 'Send Recommendation →'; submitBtn.disabled = false; alert('Network error — please check your connection and try again.'); }
   });
 </script>
+
+<!-- ═══════════ DAY/NIGHT TOGGLE JS ═══════════ -->
+<script>
+(function() {
+  var THEME_KEY = 'mattbots_theme';
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    var btn = document.getElementById('theme-toggle');
+    var logo = document.getElementById('site-logo');
+    if (theme === 'light') {
+      if (btn) btn.textContent = '☀️';
+      if (logo) logo.src = 'mattbots-logo-A.svg';
+    } else {
+      if (btn) btn.textContent = '🌙';
+      if (logo) logo.src = 'mattbots-logo-B.svg';
+    }
+  }
+  var savedTheme = localStorage.getItem(THEME_KEY) || 'dark';
+  applyTheme(savedTheme);
+  var btn = document.getElementById('theme-toggle');
+  if (btn) {
+    btn.addEventListener('click', function() {
+      var current = document.documentElement.getAttribute('data-theme');
+      var next = current === 'dark' ? 'light' : 'dark';
+      localStorage.setItem(THEME_KEY, next);
+      applyTheme(next);
+    });
+  }
+})();
+</script>
+
 </body>
 </html>
