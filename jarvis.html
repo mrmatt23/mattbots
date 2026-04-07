@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <script>document.documentElement.setAttribute('data-theme',localStorage.getItem('mattbots_theme')||'dark')</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jarvis — MattBots</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #080d1a; --bg-card: #0d1526; --text: #e2e8f0; --gold: #f59e0b;
+      --gold-dim: rgba(245,158,11,0.14); --gold-faint: rgba(245,158,11,0.07);
+      --blue: #60a5fa; --green: #34d399; --nav-bg: rgba(8,13,26,0.88);
+    }
+    [data-theme="light"] { --bg: #f8fafc; --bg-card: #ffffff; --text: #1e293b; --nav-bg: rgba(248,250,252,0.88); }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; line-height: 1.6; min-height: 100vh; }
+    nav { position: fixed; top: 0; left: 0; right: 0; background: var(--nav-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--gold-dim); padding: 12px 56px; display: flex; align-items: center; gap: 40px; z-index: 100; }
+    .nav-logo { text-decoration: none; color: var(--text); font-size: 1.1rem; font-weight: 700; flex-shrink: 0; }
+    .nav-logo img { height: 32px; }
+    nav ul { display: flex; list-style: none; gap: 8px; margin-left: auto; align-items: center; }
+    nav ul a { text-decoration: none; color: var(--text); padding: 6px 12px; border-radius: 6px; font-size: 0.9rem; transition: background 0.15s; }
+    nav ul a:hover { background: var(--gold-faint); }
+    nav ul a.active { color: var(--gold); font-weight: 600; }
+    .theme-toggle { background: none; border: none; cursor: pointer; font-size: 1.1rem; padding: 4px 8px; border-radius: 6px; margin-left: 8px; }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 0 40px; }
+    .section { padding: 96px 0 80px; }
+    .section:first-of-type { padding-top: 160px; }
+    .label { color: var(--gold); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 8px; }
+    h1 { font-size: 3rem; font-weight: 800; line-height: 1.1; margin-bottom: 20px; }
+    h2 { font-size: 2rem; font-weight: 700; margin-bottom: 8px; }
+    h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: 8px; }
+    .sub { color: #94a3b8; font-size: 1.05rem; margin-bottom: 40px; max-width: 600px; }
+    .card { background: var(--bg-card); border: 1px solid var(--gold-dim); border-radius: 12px; padding: 28px; }
+    .card-icon { font-size: 2rem; margin-bottom: 12px; }
+    .dot { display: inline-flex; align-items: center; gap: 6px; font-size: 0.78rem; font-weight: 600; margin-bottom: 10px; }
+    .dot::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: currentColor; display: inline-block; }
+    .dot-green { color: var(--green); } .dot-gold { color: var(--gold); } .dot-blue { color: var(--blue); }
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+    .tag { background: var(--gold-faint); border: 1px solid var(--gold-dim); color: rgba(245,158,11,0.6); border-radius: 100px; padding: 3px 10px; font-size: 0.78rem; }
+    .tag-blue { background: rgba(37,99,235,0.09); border: 1px solid rgba(37,99,235,0.18); color: var(--blue); }
+    .tag-green { background: rgba(52,211,153,0.09); border: 1px solid rgba(52,211,153,0.18); color: var(--green); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .btn { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; border-radius: 10px; padding: 14px 28px; font-weight: 700; font-size: 0.95rem; cursor: pointer; border: none; transition: opacity 0.15s, transform 0.1s; }
+    .btn:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn-gold { background: var(--gold); color: #080d1a; }
+    .btn-ghost { background: transparent; border: 1px solid rgba(245,158,11,0.42); color: var(--text); }
+    .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--gold-faint); border: 1px solid var(--gold-dim); border-radius: 100px; padding: 5px 14px; font-size: 0.82rem; color: var(--gold); margin-bottom: 24px; }
+    .cta-row { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 32px; }
+    .flow { display: flex; align-items: stretch; gap: 0; flex-wrap: nowrap; margin: 32px 0; overflow-x: auto; }
+    .flow-step { background: var(--bg-card); border: 1px solid var(--gold-dim); border-radius: 12px; padding: 20px 18px; text-align: center; min-width: 140px; flex: 1; }
+    .step-icon { font-size: 1.8rem; margin-bottom: 8px; }
+    .step-label { font-size: 0.72rem; font-weight: 700; color: var(--gold); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 4px; }
+    .step-title { font-weight: 700; font-size: 0.9rem; margin-bottom: 4px; }
+    .step-desc { font-size: 0.82rem; color: #94a3b8; }
+    .flow-arrow { font-size: 1.3rem; color: var(--gold); padding: 0 6px; flex-shrink: 0; align-self: center; }
+    .code-block { background: #060b16; border: 1px solid rgba(245,158,11,0.2); border-radius: 10px; padding: 20px 24px; font-family: 'SF Mono','Monaco','Consolas',monospace; font-size: 0.9rem; color: var(--green); margin: 16px 0; overflow-x: auto; line-height: 1.8; }
+    .code-block .comment { color: #475569; }
+    .code-block .cmd { color: var(--blue); }
+    .info-panel { background: rgba(245,158,11,0.05); border: 1px solid rgba(245,158,11,0.2); border-left: 3px solid var(--gold); border-radius: 8px; padding: 16px 20px; font-size: 0.93rem; margin: 16px 0; }
+    .divider { border: none; border-top: 1px solid var(--gold-dim); margin: 64px 0; }
+    footer { border-top: 1px solid var(--gold-dim); padding: 40px 56px; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; color: #64748b; }
+    .footer-logo { font-weight: 700; color: var(--gold); }
+    @media (max-width: 768px) { nav { padding: 12px 20px; } .wrap { padding: 0 20px; } h1 { font-size: 2rem; } .grid-2 { grid-template-columns: 1fr; } .flow { flex-direction: column; overflow-x: visible; } .flow-arrow { transform: rotate(90deg); } footer { padding: 32px 20px; flex-direction: column; gap: 12px; text-align: center; } }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img id="site-logo" src="mattbots-logo-B.svg" alt="MattBots" />
+  </a>
+  <ul>
+    <li><a href="index.html#tools">Tools</a></li>
+    <li><a href="index.html#projects">Projects</a></li>
+    <li><a href="index.html#ideas">Ideas</a></li>
+    <li><a href="index.html#blog">Blog</a></li>
+    <li><a href="recommend.html">Recommend</a></li>
+    <li><a href="jarvis.html" class="active">Jarvis</a></li>
+  </ul>
+  <button id="theme-toggle" class="theme-toggle" aria-label="Toggle day/night mode">🌙</button>
+</nav>
+
+<div class="wrap">
+  <section class="section">
+    <div class="hero-badge">🤖 Local AI &middot; Built on OpenClaw + Ollama</div>
+    <div class="label">Jarvis</div>
+    <h1>Your Local AI<br>Troubleshooting Bot</h1>
+    <p class="sub">Jarvis is a private, on-device AI chat assistant that runs entirely on your machine &mdash; no internet required, no API fees, no data leaving your computer.</p>
+    <div class="cta-row">
+      <a href="#how-it-works" class="btn btn-gold">How It Works &darr;</a>
+      <a href="#run-it" class="btn btn-ghost">Run It Yourself &rarr;</a>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section class="section" style="padding-top:0" id="overview">
+    <div class="label">Overview</div>
+    <h2>What Is Jarvis?</h2>
+    <p class="sub">Jarvis is a local AI chatbot pipeline &mdash; a private troubleshooting assistant built on two open-source tools that handle all routing and inference on your own hardware.</p>
+    <div class="grid" style="margin-top:32px">
+      <div class="card">
+        <div class="card-icon">🔒</div>
+        <h3>100% Private</h3>
+        <p>Nothing leaves your machine. No cloud calls, no telemetry, no account required. Your conversations stay local.</p>
+        <div class="tags"><span class="tag tag-green">Local-first</span><span class="tag tag-blue">No API fees</span></div>
+      </div>
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <h3>Fast Responses</h3>
+        <p>Ollama runs quantized models directly on your GPU or CPU &mdash; typically 3&ndash;20 tokens/sec depending on hardware and model size.</p>
+        <div class="tags"><span class="tag">Ollama</span><span class="tag tag-blue">GPU / CPU</span></div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔧</div>
+        <h3>Model Agnostic</h3>
+        <p>Swap the underlying LLM any time. Mistral, LLaMA 3, Gemma, Phi &mdash; any model Ollama supports works out of the box.</p>
+        <div class="tags"><span class="tag">Mistral</span><span class="tag">LLaMA 3</span><span class="tag">Gemma</span></div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section class="section" id="how-it-works" style="padding-top:0">
+    <div class="label">Architecture</div>
+    <h2>How It Works</h2>
+    <p class="sub">Every message travels through a five-stage pipeline &mdash; from your keyboard to the local model and back. Here is the exact sequence of operations:</p>
+    <div class="flow" style="margin-top:40px; gap:6px">
+      <div class="flow-step">
+        <div class="step-icon">⌨️</div>
+        <div class="step-label">Step 1</div>
+        <div class="step-title">User Types</div>
+        <div class="step-desc">You enter a message or question in the chat interface</div>
+      </div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step">
+        <div class="step-icon">🔀</div>
+        <div class="step-label">Step 2</div>
+        <div class="step-title">OpenClaw Receives</div>
+        <div class="step-desc">OpenClaw picks up the message and prepares the request payload</div>
+      </div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step">
+        <div class="step-icon">🧠</div>
+        <div class="step-label">Step 3</div>
+        <div class="step-title">Routes to Ollama</div>
+        <div class="step-desc">OpenClaw forwards the prompt to Ollama&rsquo;s local REST endpoint</div>
+      </div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step">
+        <div class="step-icon">✨</div>
+        <div class="step-label">Step 4</div>
+        <div class="step-title">Model Generates</div>
+        <div class="step-desc">The local LLM runs inference and streams the response tokens</div>
+      </div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step">
+        <div class="step-icon">💬</div>
+        <div class="step-label">Step 5</div>
+        <div class="step-title">Response Returns</div>
+        <div class="step-desc">OpenClaw delivers the completed answer back to your chat interface</div>
+      </div>
+    </div>
+    <div class="info-panel" style="margin-top:28px">
+      <strong>Under the hood:</strong> OpenClaw is the middleware layer &mdash; it manages chat context, formats prompts, and translates between the UI and Ollama&rsquo;s REST API running on <code>localhost:11434</code>. Ollama handles all model inference locally on your hardware.
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section class="section" style="padding-top:0">
+    <div class="label">Tech Stack</div>
+    <h2>Built With</h2>
+    <div class="grid-2" style="margin-top:28px">
+      <div class="card">
+        <div class="card-icon">🦀</div>
+        <div class="dot dot-green">Core Middleware</div>
+        <h3>OpenClaw</h3>
+        <p>The routing layer. OpenClaw receives chat input, manages conversation state, and forwards requests to the configured local model endpoint. Lightweight and extensible.</p>
+        <div class="tags"><span class="tag">Middleware</span><span class="tag tag-blue">Chat Router</span><span class="tag">Local</span></div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🦙</div>
+        <div class="dot dot-blue">Inference Engine</div>
+        <h3>Ollama</h3>
+        <p>Runs quantized LLMs locally on your machine via a simple REST API. Supports GPU acceleration when available, falls back gracefully to CPU.</p>
+        <div class="tags"><span class="tag">LLM Runtime</span><span class="tag tag-blue">REST API</span><span class="tag">GPU/CPU</span></div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section class="section" id="run-it" style="padding-top:0">
+    <div class="label">Getting Started</div>
+    <h2>How to Run Jarvis</h2>
+    <p class="sub">Two steps. Start Ollama to spin up your local model server, then run <code>openclaw</code> from the project directory.</p>
+    <div style="margin-top:32px; display:flex; flex-direction:column; gap:20px">
+      <div class="card">
+        <div class="dot dot-green" style="margin-bottom:12px">Step 1</div>
+        <h3>Start Ollama</h3>
+        <p style="margin-bottom:14px; color:#94a3b8">Ollama must be running before you launch Jarvis. It starts a local inference server on port 11434.</p>
+        <div class="code-block"><span class="comment"># Pull a model if you haven&rsquo;t yet (one-time setup)</span><br>ollama pull mistral<br><br><span class="comment"># Start the Ollama server</span><br><span class="cmd">ollama serve</span></div>
+        <div class="info-panel">Ollama runs in the background on <strong>localhost:11434</strong>. Leave this terminal open.</div>
+      </div>
+      <div class="card">
+        <div class="dot dot-blue" style="margin-bottom:12px">Step 2</div>
+        <h3>Run OpenClaw</h3>
+        <p style="margin-bottom:14px; color:#94a3b8">From the Jarvis project directory, launch OpenClaw. It connects to Ollama and opens the chat interface.</p>
+        <div class="code-block"><span class="comment"># Navigate to the project directory</span><br>cd jarvis/<br><br><span class="comment"># Launch Jarvis</span><br><span class="cmd">openclaw</span></div>
+        <div class="info-panel">Jarvis is now live in your terminal (or browser if OpenClaw opens a UI). Start chatting &mdash; everything runs locally.</div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:24px; border-color:rgba(52,211,153,0.2); border-left:3px solid var(--green)">
+      <div class="card-icon">✅</div>
+      <h3>You&rsquo;re Running Jarvis</h3>
+      <p>Once both services are up, Jarvis is live. Ask it to debug errors, explain code, or troubleshoot your system. All responses stay on your machine.</p>
+      <div class="tags" style="margin-top:14px"><span class="tag tag-green">No internet required</span><span class="tag tag-blue">All local</span><span class="tag">Ctrl+C to stop</span></div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <section class="section" style="padding-top:0; padding-bottom:96px">
+    <div class="label">Status</div>
+    <h2>Project Status</h2>
+    <div class="card" style="margin-top:24px">
+      <div class="dot dot-gold">In Progress</div>
+      <h3 style="margin-top:8px">Jarvis &mdash; Local AI Chat</h3>
+      <p style="margin-top:8px; margin-bottom:20px">Core pipeline is functional. Currently refining conversation memory, adding system prompt customization, and improving multi-turn context handling.</p>
+      <div class="tags"><span class="tag">OpenClaw</span><span class="tag">Ollama</span><span class="tag tag-blue">Local LLM</span><span class="tag">Python</span><span class="tag tag-green">Functional</span></div>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div><span class="footer-logo">mattbots.com</span></div>
+  <div>&copy; 2026 MattBots &middot; Built with &amp;#9749; and too much automation.</div>
+</footer>
+
+<script>
+(function() {
+  var THEME_KEY = 'mattbots_theme';
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    var btn = document.getElementById('theme-toggle');
+    var logo = document.getElementById('site-logo');
+    if (theme === 'light') {
+      if (btn) btn.textContent = '\u2600\uFE0F';
+      if (logo) logo.src = 'mattbots-logo-E.svg';
+    } else {
+      if (btn) btn.textContent = '\uD83C\uDF19';
+      if (logo) logo.src = 'mattbots-logo-B.svg';
+    }
+  }
+  var savedTheme = localStorage.getItem(THEME_KEY) || 'dark';
+  applyTheme(savedTheme);
+  var btn = document.getElementById('theme-toggle');
+  if (btn) {
+    btn.addEventListener('click', function() {
+      var current = document.documentElement.getAttribute('data-theme');
+      var next = current === 'dark' ? 'light' : 'dark';
+      localStorage.setItem(THEME_KEY, next);
+      applyTheme(next);
+    });
+  }
+})();
+</script>
+</body>
+</html>
